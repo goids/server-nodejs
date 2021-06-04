@@ -6,11 +6,13 @@ const response = require('../../network/response');
 const router = express.Router();
 
 router.get('/', function(req, res){
+    const filterMessage = req.query.user || null;
+
     res.header({
         "custom-header": "custom value by Diego"
     });
 
-    controller.getMessage()
+    controller.getMessage(filterMessage)
         .then( (messageList) => {
             response.success(req, res, messageList);
         })
@@ -30,15 +32,26 @@ router.post('/', function(req, res){
         });
 });
 
+router.patch('/:id', function(req, res){
+    controller.updateMessage(req.params.id, req.body.message)
+        .then( data => {
+            response.success(req, res, data, 200);
+        }).catch( e => {
+            response.error(req, res, 'Error interno', 500, e);
+        })
+})
+
 router.put('/', function(req, res){
     response.success(req, res, "Se ha actualizado el mensaje");
 });
 
-router.delete('/', function(req, res){
+router.delete('/:id', function(req, res){
     res.header({
         "eliminar": "eliminando mensaje"
     });
-    response.success(req, res, "Mensaje eliminado")
-})
+    controller.deleteMessage(req.params.id)
+        .then( () => response.success(req, res, `Mensage ${req.params.id} eliminado`))
+        .catch ( e => response.error(req, res, 'Error interno', 500, e));
+});
 
 module.exports = router;

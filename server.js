@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParse = require('body-parser');
 
+const db = require('./db');
+
 // Router funcional con un solo componente
 // const router = require('./components/message/network');
 // Router funcional con varios componentes
 const router = require('./network/routes');
 
 //const router = express.Router();
+db('mongodb+srv://db_user_goide:goide2021@cluster0.tryim.mongodb.net/goide_db?retryWrites=true&w=majority');
 
 let app = express();
 
