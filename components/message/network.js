@@ -1,7 +1,32 @@
 const express = require('express');
+const multer = require('multer');
 
 const controller = require('./controller');
 const response = require('../../network/response');
+
+// PARA AGREGAR LA EXTENSIO Y EVITAR QUE SEA UN ARCHIVO BINARIO
+// VAMOS A HACER USO DE LA SIGUIENTE CONFIGURACION
+// const storage = multer.diskStorage({
+//     destination: function(req, res, cb){
+//          cb(null, 'uploads/')
+//     },
+//     // destination : "uploads/", -> este mod oes igual de valido que el de arriba
+//     filename: function(req, file, cb) {
+//         console.log(file);
+//         const [name, extension] = file.originalname.split('.');
+//         cb(null , `${name}-${Date.now()}.${extension}` )
+//     }
+// });
+
+// Subir Archivo en su formato original
+// const upload = multer({
+//     storage
+// })
+
+// Archivo subdio en formato Binario
+const upload = multer({
+    dest: 'public/files/',
+})
 
 const router = express.Router();
 
@@ -20,10 +45,10 @@ router.get('/', function(req, res){
 
 });
 
-router.post('/', function(req, res){
+router.post('/', upload.single('file'), function(req, res){
     // console.log(req.query);
     // console.log(req.body);
-    controller.addMessage(req.body.user, req.body.message)
+    controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file)
         .then( (fullMesagge) => {
             response.success(req, res, fullMesagge, 201);
         })
