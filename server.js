@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParse = require('body-parser');
 const socket = require('./socket');
+const cors = require('cors');
 
 let app = express();
 const server = require('http').Server(app);
@@ -15,7 +16,10 @@ const router = require('./network/routes');
 //const router = express.Router();
 db('mongodb+srv://db_user_goide:goide2021@cluster0.tryim.mongodb.net/goide_db?retryWrites=true&w=majority');
 
-app.use(bodyParse.json())
+app.use(cors());
+
+app.use(bodyParse.json());
+app.use(bodyParse.urlencoded({extended: false}))
 // Usadno el middleware de Express
 // app.use(router);
 

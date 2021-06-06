@@ -9,5 +9,41 @@
 </head>
 <body>
     <h1>Hola Goide</h1>
+    <section>
+
+    </section>
+
+    <script>
+
+        const body = document.querySelector('section');
+
+        const getUsers = () => {
+            callApi('user')
+                .then( data => printScreenUser(data.body))
+                .catch( e => console.log('error', e))
+        }
+
+        const printScreenUser = (data) => {
+            const title = document.createElement('h1');
+            title.textContent = 'Users';
+            body.appendChild(title)
+
+            const users = data.map( user => {
+                const p = document.createElement('p');
+                p.textContent = user.name;
+                body.appendChild(p);
+            });
+        }
+
+        const callApi = async (section) => {
+            if(!section)
+                return false;
+                
+            return await fetch( `http://localhost:3005/${section}`)
+                .then( response => response.json())
+                .catch( e => console.log('error', e))
+        }
+
+    </script>
 </body>
 </html>
